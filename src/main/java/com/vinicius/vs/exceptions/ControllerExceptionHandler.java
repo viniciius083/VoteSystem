@@ -3,6 +3,7 @@ package com.vinicius.vs.exceptions;
 import com.vinicius.vs.exceptions.errors.ApiRequestException;
 import com.vinicius.vs.exceptions.errors.DataIntegratyViolationException;
 import com.vinicius.vs.exceptions.errors.ObjectNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.ConstraintViolationException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -36,5 +38,11 @@ public class ControllerExceptionHandler {
     public ResponseEntity<StandardError> SQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new StandardError(HttpStatus.BAD_REQUEST.value(), "O dado já existe no nosso banco.", LocalDateTime.now()));
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<StandardError> DataIntegrityViolationException(DataIntegrityViolationException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new StandardError(HttpStatus.BAD_REQUEST.value(), "Dado duplicado em nosso banco.", LocalDateTime.now()));
+    }
+
 
 }
