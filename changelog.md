@@ -4,6 +4,18 @@ Todas as alterações do projeto devem ser documentadas neste arquivo.
 
 O formato é baseado no [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.0] - 2023-10-25
+
+## Adicionado
+
+- Documentação do código
+- Criação de novos DTO's
+- Adição de threads quando abrir votação
+- Implementação do Swagger
+- Alteração de Padrão de nomes para Inglês
+- Implementação do Feign com Random-data-api
+- Implementação do Rabbitmq
+
 ## [0.0.1] - 2023-10-24
 
 ### Adicionado
