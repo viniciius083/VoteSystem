@@ -11,7 +11,7 @@ public interface IAssociateService {
 
     List<AssociateDTO> listAssociates();
 
-    Associate listAssociates(long id);
+    Associate listAssociate(long id);
 
     void updateAssociate(AssociateDTO associateDTO);
 }

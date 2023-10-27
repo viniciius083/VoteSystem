@@ -10,6 +10,7 @@ import com.vinicius.vs.agenda.model.Agenda;
 import com.vinicius.vs.agenda.repository.IAgendaRepository;
 import com.vinicius.vs.agenda.service.IAgendaService;
 import com.vinicius.vs.rabbitmq.service.RabbitmqService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -25,28 +26,26 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AgendaServiceImpl implements IAgendaService {
 
-    private final IAgendaRepository pautaRepository;
+    private final IAgendaRepository agendaRepository;
     private final RabbitmqService rabbitmqService;
 
     ScheduledExecutorService scheduledThreadPool = new ScheduledThreadPoolExecutor(3);
 
-    public AgendaServiceImpl(IAgendaRepository pautaRepository, RabbitmqService rabbitmqService) {
-        this.pautaRepository = pautaRepository;
+    public AgendaServiceImpl(IAgendaRepository AgendaRepository, RabbitmqService rabbitmqService) {
+        this.agendaRepository = AgendaRepository;
         this.rabbitmqService = rabbitmqService;
     }
 
     @Override
     public AgendaDTO createAgenda(CreateAgendaDTO createAgendaDTO) {
         log.info("Solicitada a criação de uma pauta.");
-        Agenda pauta = new Agenda(createAgendaDTO);
-        pautaRepository.save(pauta);
-        return new AgendaDTO(pauta);
+        return new AgendaDTO(agendaRepository.save(new Agenda(createAgendaDTO)));
     }
 
     @Override
     public AgendaDTO openVote(OpenVoteDTO openVoteDTO) {
         log.info("Pauta "+openVoteDTO.getAgendaId()+" está sendo aberta por "+openVoteDTO.getTime()+" minutos.");
-        Agenda pauta = pautaRepository.findById(openVoteDTO.getAgendaId()).orElseThrow(() -> new ObjectNotFoundException("Pauta não encontrada!"));
+        Agenda pauta = agendaRepository.findById(openVoteDTO.getAgendaId()).orElseThrow(() -> new ObjectNotFoundException("Pauta não encontrada!"));
 
         if(pauta.getOpenVote() != null){
             throw new DataIntegratyViolationException("A Pauta já foi aberta!");
@@ -54,7 +53,7 @@ public class AgendaServiceImpl implements IAgendaService {
 
         pauta.setOpenVote(LocalDateTime.now());
         pauta.setCloseVote(LocalDateTime.now().plusMinutes(openVoteDTO.getTime()));
-        pautaRepository.save(pauta);
+        agendaRepository.save(pauta);
 
         scheduledThreadPool.schedule(() -> countVotes(openVoteDTO.getAgendaId()),
                 (openVoteDTO.getTime() + 10) , TimeUnit.SECONDS);
@@ -64,25 +63,25 @@ public class AgendaServiceImpl implements IAgendaService {
 
     @Override
     public List<AgendaDTO> listAgendas() {
-        return pautaRepository.findAll().stream().map(AgendaDTO::new).collect(Collectors.toList());
+        return agendaRepository.findAll().stream().map(AgendaDTO::new).collect(Collectors.toList());
     }
 
     @Override
     public Agenda listAgenda(long id) {
         log.info("Buscando pauta de id "+id);
-        return pautaRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Pauta não encontrada!"));
+        return agendaRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Pauta não encontrada!"));
     }
 
     public void countVotes(long pautaId){
         log.info("Iniciando a contagem dos votos da pauta: "+ pautaId);
-        Agenda pauta = pautaRepository.findById(pautaId).orElse(null);
+        Agenda pauta = agendaRepository.findById(pautaId).orElse(null);
 
         if (pauta != null) {
             long votesYes = pauta.getVotes().stream().filter(vote -> vote.getVote().equals(AgendaResult.SIM)).count();
             long votesNo = pauta.getVotes().stream().filter(vote -> vote.getVote().equals(AgendaResult.NAO)).count();
 
             pauta.setResult(votesYes > votesNo ? AgendaResult.SIM : AgendaResult.NAO);
-            pautaRepository.save(pauta);
+            agendaRepository.save(pauta);
 
             rabbitmqService.sendMessageAgenda("A pauta: "+pauta.getSubject()+" foi finalizada e foi "+ (pauta.getResult().equals(AgendaResult.SIM) ? "Aprovada":"Negada"));
         }else{

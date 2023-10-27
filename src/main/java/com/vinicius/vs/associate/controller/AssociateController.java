@@ -54,6 +54,6 @@ public class AssociateController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public AssociateDTO listAssociate(@PathVariable long id){
-        return new AssociateDTO(associadoService.listAssociates(id));
+        return new AssociateDTO(associadoService.listAssociate(id));
     }
 }
