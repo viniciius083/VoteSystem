@@ -4,6 +4,7 @@ services:
   mysqldb:
     image: mysql
     container_name: mysql
+    restart: always
     environment:
       - MYSQL_USER=vs_user
       - MYSQL_PASSWORD=vs_pass
@@ -19,6 +20,7 @@ services:
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
+    restart: always
     ports:
       - "5672:5672"
       - "15672:15672"
