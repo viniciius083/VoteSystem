@@ -49,8 +49,8 @@ public class Agenda {
     private int quantityVotes = 0;
 
 
-    public Agenda(CreateAgendaDTO pautaLiteDTO) {
-        this.setSubject(pautaLiteDTO.getSubject());
+    public Agenda(CreateAgendaDTO createAgendaDTO) {
+        this.setSubject(createAgendaDTO.getSubject());
     }
 
 }

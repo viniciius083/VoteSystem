@@ -9,7 +9,7 @@ O formato é baseado no [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## Adicionado
 
 - Adição do docker-compose
-- Adição do readme
+- Adição do readme/imagens
 
 ## [0.1.1] - 2023-10-26
 

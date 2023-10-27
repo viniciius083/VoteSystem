@@ -17,7 +17,7 @@ import java.util.List;
 @Api(value = "Controlador de Rotas de Associado", produces = MediaType.APPLICATION_JSON_VALUE, tags = {"Associado Controller"})
 public class AssociateController {
 
-    private final IAssociateService associadoService;
+    private final IAssociateService associateService;
 
     /**
      * Endpoint para cadastrar um associado.
@@ -28,8 +28,8 @@ public class AssociateController {
     @PostMapping(produces="application/json", consumes="application/json")
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public AssociateDTO createAssociate(@RequestBody CreateAssociateDTO associadoDTO){
-        return associadoService.createAssociate(associadoDTO);
+    public AssociateDTO createAssociate(@RequestBody CreateAssociateDTO createAssociateDTO){
+        return associateService.createAssociate(createAssociateDTO);
     }
 
     /**
@@ -41,7 +41,7 @@ public class AssociateController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public List<AssociateDTO> listAssociates(){
-        return associadoService.listAssociates();
+        return associateService.listAssociates();
     }
 
     /**
@@ -54,6 +54,6 @@ public class AssociateController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public AssociateDTO listAssociate(@PathVariable long id){
-        return new AssociateDTO(associadoService.listAssociate(id));
+        return new AssociateDTO(associateService.listAssociate(id));
     }
 }
