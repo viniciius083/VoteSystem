@@ -4,7 +4,7 @@ O VoteSystem é uma aplicação java para gerenciar sessões, com ela podemos cr
 
 ## 🚀 Começando
 
-Essas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste.
+Essas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste, na pasta raiz, contém uma coleção do postman caso prefira testar por ele.
 
 
 ### 📋 Pré-requisitos
