@@ -44,5 +44,10 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new StandardError(HttpStatus.BAD_REQUEST.value(), "Dado duplicado em nosso banco.", LocalDateTime.now()));
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<StandardError> ConstraintViolationException(ConstraintViolationException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new StandardError(HttpStatus.BAD_REQUEST.value(), "Há um erro na sua requisição.",LocalDateTime.now()));
+    }
+
 
 }

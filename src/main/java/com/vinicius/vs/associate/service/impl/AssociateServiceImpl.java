@@ -5,6 +5,7 @@ import com.vinicius.vs.associate.dtos.CreateAssociateDTO;
 import com.vinicius.vs.associate.model.Associate;
 import com.vinicius.vs.associate.repository.IAssociateRepository;
 import com.vinicius.vs.associate.service.IAssociateService;
+import com.vinicius.vs.exceptions.errors.DataIntegratyViolationException;
 import com.vinicius.vs.exceptions.errors.ObjectNotFoundException;
 import com.vinicius.vs.feign.RandomDataApi;
 import com.vinicius.vs.rabbitmq.service.RabbitmqService;
@@ -33,9 +34,12 @@ public class AssociateServiceImpl implements IAssociateService {
     @Override
     public AssociateDTO createAssociate(CreateAssociateDTO createAssociateDTO) {
         Associate associate = new Associate(createAssociateDTO);
+        if(associadoRepository.findByCpf(createAssociateDTO.getCpf()).isPresent()){
+            throw new DataIntegratyViolationException("CPF já existente no nosso banco!");
+        }
         associadoRepository.save(associate);
-
         rabbitmqService.sendMessageAssociate(new AssociateDTO(associate));
+
         return new AssociateDTO(associate);
     }
 
@@ -47,7 +51,6 @@ public class AssociateServiceImpl implements IAssociateService {
      */
     @Override
     public List<AssociateDTO> listAssociates() {
-
         return associadoRepository.findAll().stream().map(AssociateDTO::new).collect(Collectors.toList());
     }
 
@@ -58,7 +61,7 @@ public class AssociateServiceImpl implements IAssociateService {
      * @return detalhes do associado identificado.
      */
     @Override
-    public Associate listAssociates(long id) {
+    public Associate listAssociate(long id) {
         return associadoRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Associado(a) não encontrado(a)!"));
     }
 
