@@ -8,6 +8,13 @@ O formato é baseado no [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## Adicionado
 
+- Adição do docker-compose
+- Adição do 
+
+## [0.1.1] - 2023-10-26
+
+## Adicionado
+
 - Criação dos testes
 
 ## [0.1.0] - 2023-10-25

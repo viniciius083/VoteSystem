@@ -56,7 +56,7 @@ public class AgendaServiceImpl implements IAgendaService {
         agendaRepository.save(pauta);
 
         scheduledThreadPool.schedule(() -> countVotes(openVoteDTO.getAgendaId()),
-                (openVoteDTO.getTime() + 10) , TimeUnit.SECONDS);
+                (openVoteDTO.getTime() * 60L + 10) , TimeUnit.SECONDS);
 
         return new AgendaDTO(pauta);
     }
