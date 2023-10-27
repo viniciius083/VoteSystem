@@ -46,7 +46,7 @@ mvn spring-boot:run
 ![img.png](images/mvnSpringBootRun.png)
 
 6. Com isso, temos a [pagina inicial](http://localhost:8080) do projeto com a documentação do Swagger:
-![img.png](img.png)
+![img.png](images/swaggerLocalHost.png)
 
 
 
