@@ -21,7 +21,7 @@ public class VoteServiceImpl implements IVoteService {
 
     private final IVoteRepository votoRepository;
 
-    private final IAgendaService pautaService;
+    private final IAgendaService agendaService;
 
     private final IAssociateService associadoService;
 
@@ -32,24 +32,24 @@ public class VoteServiceImpl implements IVoteService {
      */
     @Override
     public VoteConfirmationDTO vote(VoteDTO voteDTO) {
-        Agenda pauta = pautaService.listAgenda(voteDTO.getAgendaId());
-        Associate associado = associadoService.listAssociates(voteDTO.getAssociateId());
+        Agenda agenda = agendaService.listAgenda(voteDTO.getAgendaId());
+        Associate associate = associadoService.listAssociate(voteDTO.getAssociateId());
 
-        if(pauta.getOpenVote() == null){
+        if(agenda.getOpenVote() == null){
             throw new DataIntegratyViolationException("A pauta não foi aberta!");
         }
-        if(LocalDateTime.now().isAfter(pauta.getCloseVote())){
+        if(LocalDateTime.now().isAfter(agenda.getCloseVote())){
             throw new DataIntegratyViolationException("A pauta já foi encerrada!");
         }
 
-       if(pauta.getVotes().stream().anyMatch(voto -> voto.getAssociate().getId().equals(associado.getId()))){
+       if(agenda.getVotes().stream().anyMatch(voto -> voto.getAssociate().getId().equals(associate.getId()))){
            throw new DataIntegratyViolationException("O associado já votou na pauta.");
         };
 
-       pauta.setQuantityVotes(pauta.getQuantityVotes() +1);
-       Vote vote = new Vote(pauta, associado, voteDTO.getVote());
+       agenda.setQuantityVotes(agenda.getQuantityVotes() +1);
+       Vote vote = new Vote(agenda, associate, voteDTO.getVote());
        votoRepository.save(vote);
 
-       return new VoteConfirmationDTO(associado.getName(), vote.getVote(), pauta.getSubject());
+       return new VoteConfirmationDTO(associate.getName(), vote.getVote(), agenda.getSubject());
     }
 }
