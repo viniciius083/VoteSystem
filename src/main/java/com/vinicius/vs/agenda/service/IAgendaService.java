@@ -8,9 +8,9 @@ import com.vinicius.vs.agenda.model.Agenda;
 import java.util.List;
 
 public interface IAgendaService {
-    AgendaDTO createAgenda(CreateAgendaDTO pautaLiteDTO);
+    AgendaDTO createAgenda(CreateAgendaDTO createAgendaDTO);
 
-    AgendaDTO openVote(OpenVoteDTO abrirVotacaoDTO);
+    AgendaDTO openVote(OpenVoteDTO openVoteDTO);
 
     List<AgendaDTO> listAgendas();
 

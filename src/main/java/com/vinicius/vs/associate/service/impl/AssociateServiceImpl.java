@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AssociateServiceImpl implements IAssociateService {
 
-    private final IAssociateRepository associadoRepository;
+    private final IAssociateRepository associateRepository;
 
     private final RandomDataApi randomDataApi;
 
@@ -34,10 +34,10 @@ public class AssociateServiceImpl implements IAssociateService {
     @Override
     public AssociateDTO createAssociate(CreateAssociateDTO createAssociateDTO) {
         Associate associate = new Associate(createAssociateDTO);
-        if(associadoRepository.findByCpf(createAssociateDTO.getCpf()).isPresent()){
+        if(associateRepository.findByCpf(createAssociateDTO.getCpf()).isPresent()){
             throw new DataIntegratyViolationException("CPF já existente no nosso banco!");
         }
-        associadoRepository.save(associate);
+        associateRepository.save(associate);
         rabbitmqService.sendMessageAssociate(new AssociateDTO(associate));
 
         return new AssociateDTO(associate);
@@ -51,7 +51,7 @@ public class AssociateServiceImpl implements IAssociateService {
      */
     @Override
     public List<AssociateDTO> listAssociates() {
-        return associadoRepository.findAll().stream().map(AssociateDTO::new).collect(Collectors.toList());
+        return associateRepository.findAll().stream().map(AssociateDTO::new).collect(Collectors.toList());
     }
 
     /**
@@ -62,16 +62,16 @@ public class AssociateServiceImpl implements IAssociateService {
      */
     @Override
     public Associate listAssociate(long id) {
-        return associadoRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Associado(a) não encontrado(a)!"));
+        return associateRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Associado(a) não encontrado(a)!"));
     }
 
 
     @Override
     public void updateAssociate(AssociateDTO associateDTO){
-        Associate associate = associadoRepository.findById(associateDTO.getId()).orElse(null);
+        Associate associate = associateRepository.findById(associateDTO.getId()).orElse(null);
         if (associate != null) {
             associate.update(randomDataApi.searchRandomData());
-            associadoRepository.save(associate);
+            associateRepository.save(associate);
         }
     }
 }

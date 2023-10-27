@@ -1,0 +1,199 @@
+{
+	"info": {
+		"_postman_id": "59f27a50-be7a-4d9b-8b3b-9ad72da812c8",
+		"name": "VS - Vote System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Associado",
+			"item": [
+				{
+					"name": "Criar Associado",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cpf\": \"12291783416\",\r\n    \"name\": \"Vinicius\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{env}}{{port}}/associate",
+							"host": [
+								"{{env}}{{port}}"
+							],
+							"path": [
+								"associate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Associados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{env}}{{port}}/associate",
+							"host": [
+								"{{env}}{{port}}"
+							],
+							"path": [
+								"associate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Associado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{env}}{{port}}/associate/1",
+							"host": [
+								"{{env}}{{port}}"
+							],
+							"path": [
+								"associate",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pauta",
+			"item": [
+				{
+					"name": "Criar Pauta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"subject\": \"Compra de Curso\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{env}}{{port}}/agenda",
+							"host": [
+								"{{env}}{{port}}"
+							],
+							"path": [
+								"agenda"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Pautas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{env}}{{port}}/agenda",
+							"host": [
+								"{{env}}{{port}}"
+							],
+							"path": [
+								"agenda"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Pauta",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{env}}{{port}}/agenda/1",
+							"host": [
+								"{{env}}{{port}}"
+							],
+							"path": [
+								"agenda",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Abrir Votação",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"agendaId\": 1,\r\n    \"time\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{env}}{{port}}/agenda/open-vote",
+							"host": [
+								"{{env}}{{port}}"
+							],
+							"path": [
+								"agenda",
+								"open-vote"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Voto",
+			"item": [
+				{
+					"name": "Votar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"associateId\": 1,\r\n    \"vote\": \"SIM\",\r\n    \"agendaId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{env}}{{port}}/vote",
+							"host": [
+								"{{env}}{{port}}"
+							],
+							"path": [
+								"vote"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    image: mysql
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_USER=vs_user
+      - MYSQL_PASSWORD=vs_pass
+      - MYSQL_DATABASE=vs
+      - MYSQL_ROOT_PASSWORD=vs_root_password
+    ports:
+      - "3306:3306"
+    expose:
+        - '3306'
+    volumes:
+      - my_data:/var/lib/mysql
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - "15672"
+      - "5672"
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  my_data:

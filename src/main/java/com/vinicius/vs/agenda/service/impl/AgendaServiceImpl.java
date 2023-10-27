@@ -45,20 +45,20 @@ public class AgendaServiceImpl implements IAgendaService {
     @Override
     public AgendaDTO openVote(OpenVoteDTO openVoteDTO) {
         log.info("Pauta "+openVoteDTO.getAgendaId()+" está sendo aberta por "+openVoteDTO.getTime()+" minutos.");
-        Agenda pauta = agendaRepository.findById(openVoteDTO.getAgendaId()).orElseThrow(() -> new ObjectNotFoundException("Pauta não encontrada!"));
+        Agenda agenda = agendaRepository.findById(openVoteDTO.getAgendaId()).orElseThrow(() -> new ObjectNotFoundException("Pauta não encontrada!"));
 
-        if(pauta.getOpenVote() != null){
+        if(agenda.getOpenVote() != null){
             throw new DataIntegratyViolationException("A Pauta já foi aberta!");
         }
 
-        pauta.setOpenVote(LocalDateTime.now());
-        pauta.setCloseVote(LocalDateTime.now().plusMinutes(openVoteDTO.getTime()));
-        agendaRepository.save(pauta);
+        agenda.setOpenVote(LocalDateTime.now());
+        agenda.setCloseVote(LocalDateTime.now().plusMinutes(openVoteDTO.getTime()));
+        agendaRepository.save(agenda);
 
         scheduledThreadPool.schedule(() -> countVotes(openVoteDTO.getAgendaId()),
-                (openVoteDTO.getTime() + 10) , TimeUnit.SECONDS);
+                (openVoteDTO.getTime() * 60L + 10) , TimeUnit.SECONDS);
 
-        return new AgendaDTO(pauta);
+        return new AgendaDTO(agenda);
     }
 
     @Override
@@ -72,18 +72,18 @@ public class AgendaServiceImpl implements IAgendaService {
         return agendaRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Pauta não encontrada!"));
     }
 
-    public void countVotes(long pautaId){
-        log.info("Iniciando a contagem dos votos da pauta: "+ pautaId);
-        Agenda pauta = agendaRepository.findById(pautaId).orElse(null);
+    public void countVotes(long agendaId){
+        log.info("Iniciando a contagem dos votos da pauta: "+ agendaId);
+        Agenda agenda = agendaRepository.findById(agendaId).orElse(null);
 
-        if (pauta != null) {
-            long votesYes = pauta.getVotes().stream().filter(vote -> vote.getVote().equals(AgendaResult.SIM)).count();
-            long votesNo = pauta.getVotes().stream().filter(vote -> vote.getVote().equals(AgendaResult.NAO)).count();
+        if (agenda != null) {
+            long votesYes = agenda.getVotes().stream().filter(vote -> vote.getVote().equals(AgendaResult.SIM)).count();
+            long votesNo = agenda.getVotes().stream().filter(vote -> vote.getVote().equals(AgendaResult.NAO)).count();
 
-            pauta.setResult(votesYes > votesNo ? AgendaResult.SIM : AgendaResult.NAO);
-            agendaRepository.save(pauta);
+            agenda.setResult(votesYes > votesNo ? AgendaResult.SIM : AgendaResult.NAO);
+            agendaRepository.save(agenda);
 
-            rabbitmqService.sendMessageAgenda("A pauta: "+pauta.getSubject()+" foi finalizada e foi "+ (pauta.getResult().equals(AgendaResult.SIM) ? "Aprovada":"Negada"));
+            rabbitmqService.sendMessageAgenda("A pauta: "+agenda.getSubject()+" foi finalizada e foi "+ (agenda.getResult().equals(AgendaResult.SIM) ? "Aprovada":"Negada"));
         }else{
             rabbitmqService.sendMessageAgenda("Não foi encontrada nenhuma pauta referente ao ID.");
         }

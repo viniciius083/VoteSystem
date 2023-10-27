@@ -52,9 +52,9 @@ public class Associate {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "associate")
     private List<Vote> votes = new ArrayList<>();
 
-    public Associate(CreateAssociateDTO associadoDTO) {
-        this.setCpf(associadoDTO.getCpf());
-        this.setName(associadoDTO.getName());
+    public Associate(CreateAssociateDTO associateDTO) {
+        this.setCpf(associateDTO.getCpf());
+        this.setName(associateDTO.getName());
     }
 
     public void update(RandomInfoDTO randomInfoDTO) {

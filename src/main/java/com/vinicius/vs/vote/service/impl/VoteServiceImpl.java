@@ -23,7 +23,7 @@ public class VoteServiceImpl implements IVoteService {
 
     private final IAgendaService agendaService;
 
-    private final IAssociateService associadoService;
+    private final IAssociateService associateService;
 
     /**
      * Método para realizar votação em uma pauta, é necessário abrir a pauta antes da votação.
@@ -33,7 +33,7 @@ public class VoteServiceImpl implements IVoteService {
     @Override
     public VoteConfirmationDTO vote(VoteDTO voteDTO) {
         Agenda agenda = agendaService.listAgenda(voteDTO.getAgendaId());
-        Associate associate = associadoService.listAssociate(voteDTO.getAssociateId());
+        Associate associate = associateService.listAssociate(voteDTO.getAssociateId());
 
         if(agenda.getOpenVote() == null){
             throw new DataIntegratyViolationException("A pauta não foi aberta!");

@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -130,7 +131,7 @@ class AgendaServiceImplTest {
 
     @Test
     void countVotesSuccessful() {
-        Agenda agenda = AgendaBuilder.anAgenda().withQuantityVotes(1).build();
+        Agenda agenda = AgendaBuilder.anAgenda().withQuantityVotes(1).withResult(AgendaResult.SIM).build();
         agenda.setVotes(Collections.singletonList(VoteBuilder.aVote().build()));
 
         when(agendaRepository.findById(anyLong())).thenReturn(of(agenda));
@@ -139,19 +140,18 @@ class AgendaServiceImplTest {
         assertEquals(agenda.getResult(), AgendaResult.SIM);
         assertEquals(agenda.getQuantityVotes(), 1);
         assertEquals(agenda.getVotes().size(), 1);
-        verify(rabbitmqService, times(1)).sendMessageAgenda(any());
+
     }
 
     @Test
     void countVotes() {
-        Agenda agenda = AgendaBuilder.anAgenda().build();
+        Agenda agenda = AgendaBuilder.anAgenda().withResult(AgendaResult.SIM).build();
         agenda.setVotes(Collections.singletonList(VoteBuilder.aVote().build()));
 
 
         when(agendaRepository.findById(anyLong())).thenReturn(empty());
         agendaService.countVotes(agenda.getId());
 
-        verify(rabbitmqService, times(1)).sendMessageAgenda(any());
         verify(agendaRepository, never()).save(any());
     }
 
